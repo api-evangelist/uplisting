@@ -1,0 +1,62 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Uplisting
+providerId: uplisting
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Vacation Rental
+- Short-Term Rental
+- Channel Manager
+- Rate Limiting
+- Quotas
+description: >-
+  All calls to the Uplisting Public and Partner API are subject to rate
+  limiting. Partners that exceed the limit receive an HTTP 429 Too Many Requests
+  response. Uplisting does not publish fixed numeric thresholds for the invite-
+  only API; specific per-partner limits are communicated during onboarding.
+  Uplisting also expects partner API endpoints to respond within about 5 seconds,
+  and applies a distinct reliability policy to webhook receivers.
+notes: >-
+  Numeric per-minute / per-hour request caps are not published for the invite-
+  only API. The design guidance is to pull a snapshot of bookings / availability
+  and then rely on webhooks for changes, which keeps polling volume low. Confirm
+  exact partner limits with Uplisting during onboarding.
+sources:
+- https://support.uplisting.io/docs/api
+- https://documenter.getpostman.com/view/1320372/SWTBfdW6
+responseCodes:
+  throttled: 429
+limits:
+- name: Public and Partner API Requests
+  scope: partner
+  metric: requests
+  limit: not published
+  notes: Rate limited; exceeding the limit returns HTTP 429. Numeric thresholds are shared during partner onboarding.
+- name: Partner Endpoint Response Time
+  scope: endpoint
+  metric: seconds
+  limit: 5
+  notes: Uplisting expects partner-facing endpoints to respond within about 5 seconds.
+- name: Webhook Receiver Response Time
+  scope: webhook
+  metric: seconds
+  limit: 5
+  notes: Webhook receiver endpoints must return a 2xx response within 5 seconds.
+- name: Webhook Consecutive Failures
+  scope: webhook
+  metric: events
+  limit: 5
+  notes: After 5 consecutive failed deliveries, the endpoint is auto-disabled until re-enabled.
+policies:
+- name: Snapshot-Then-Webhooks
+  description: Uplisting recommends fetching an initial snapshot of bookings/availability, then using webhooks to stay in sync, rather than frequent polling.
+- name: Backoff Strategy
+  description: On a 429 response, clients should back off (exponential backoff with jitter) and retry rather than hammering the endpoint.
+- name: Webhook Auto-Disable
+  description: An endpoint that fails to respond successfully to 5 consecutive events is disabled and stops receiving events until re-enabled by the partner.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

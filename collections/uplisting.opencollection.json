@@ -1,0 +1,241 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{apiKey}}",
+      "password": ""
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Account", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get the authenticated user", "type": "http" },
+          "http": { "method": "GET", "url": "https://connect.uplisting.io/users/me" },
+          "docs": "Returns the account/user for the supplied API key; used to validate credentials. Confirmed endpoint."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Properties", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List properties", "type": "http" },
+          "http": { "method": "GET", "url": "https://connect.uplisting.io/properties" },
+          "docs": "Lists properties (listings), including the slug for direct booking links. Confirmed surface."
+        },
+        {
+          "info": { "name": "Get a property", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/properties/:propertyId",
+            "params": [
+              { "name": "propertyId", "value": "", "type": "path", "description": "The property identifier." }
+            ]
+          },
+          "docs": "Retrieves a single property by identifier. Confirmed surface; response fields modeled."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Bookings", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List bookings", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/bookings",
+            "params": [
+              { "name": "property_id", "value": "", "type": "query", "description": "Filter to a single property." },
+              { "name": "check_in_from", "value": "", "type": "query", "description": "Check-in on or after this date." },
+              { "name": "check_in_to", "value": "", "type": "query", "description": "Check-in on or before this date." }
+            ]
+          },
+          "docs": "Returns a snapshot list of bookings across channels; use webhooks for changes. Confirmed surface."
+        },
+        {
+          "info": { "name": "Create a confirmed booking", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.uplisting.io/bookings",
+            "body": { "type": "json", "data": "{\n  \"property_id\": \"\",\n  \"check_in\": \"2026-08-01\",\n  \"check_out\": \"2026-08-05\",\n  \"guests\": 2\n}" }
+          },
+          "docs": "Creates a confirmed booking (returns 201). Confirmed surface; request fields modeled."
+        },
+        {
+          "info": { "name": "Get a booking", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/bookings/:bookingId",
+            "params": [
+              { "name": "bookingId", "value": "", "type": "path", "description": "The booking identifier." }
+            ]
+          },
+          "docs": "Retrieves a single booking by identifier. Confirmed surface; response fields modeled."
+        },
+        {
+          "info": { "name": "Update a booking (modeled)", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://connect.uplisting.io/bookings/:bookingId",
+            "params": [
+              { "name": "bookingId", "value": "", "type": "path", "description": "The booking identifier." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"status\": \"cancelled\"\n}" }
+          },
+          "docs": "Updates mutable fields on a booking. Modeled."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Availability", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List available properties for a date range", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/availability",
+            "params": [
+              { "name": "check_in", "value": "2026-08-01", "type": "query", "description": "Check-in date (YYYY-MM-DD)." },
+              { "name": "check_out", "value": "2026-08-05", "type": "query", "description": "Check-out date (YYYY-MM-DD)." },
+              { "name": "guests", "value": "2", "type": "query", "description": "Minimum guest capacity." }
+            ]
+          },
+          "docs": "Returns properties available for a date range, optionally filtered by guests. Confirmed surface."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Calendar", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get calendar for a property", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/properties/:propertyId/calendar",
+            "params": [
+              { "name": "propertyId", "value": "", "type": "path", "description": "The property identifier." },
+              { "name": "from", "value": "2026-08-01", "type": "query", "description": "Start of the calendar window." },
+              { "name": "to", "value": "2026-08-31", "type": "query", "description": "End of the calendar window." }
+            ]
+          },
+          "docs": "Returns availability, prices, and restrictions for a property over a date range. Confirmed surface."
+        },
+        {
+          "info": { "name": "Update calendar for a property", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.uplisting.io/properties/:propertyId/calendar",
+            "params": [
+              { "name": "propertyId", "value": "", "type": "path", "description": "The property identifier." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"from\": \"2026-08-01\",\n  \"to\": \"2026-08-05\",\n  \"available\": false,\n  \"min_stay\": 3\n}" }
+          },
+          "docs": "Submits calendar updates; accepted asynchronously (returns 202). Confirmed 202 behavior; request fields modeled."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Rates", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Update nightly rates for a property (modeled)", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.uplisting.io/properties/:propertyId/rates",
+            "params": [
+              { "name": "propertyId", "value": "", "type": "path", "description": "The property identifier." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"from\": \"2026-08-01\",\n  \"to\": \"2026-08-31\",\n  \"price\": 189.00,\n  \"currency\": \"USD\"\n}" }
+          },
+          "docs": "Sets nightly rates per date; propagates to connected channels. Modeled from documented calendar/pricing behavior."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Guests", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List guests (modeled)", "type": "http" },
+          "http": { "method": "GET", "url": "https://connect.uplisting.io/guests" },
+          "docs": "Lists guest records tied to bookings. Modeled."
+        },
+        {
+          "info": { "name": "Get a guest (modeled)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/guests/:guestId",
+            "params": [
+              { "name": "guestId", "value": "", "type": "path", "description": "The guest identifier." }
+            ]
+          },
+          "docs": "Retrieves a guest, including identity-verification status. Modeled."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Messages", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List messages for a booking (modeled)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/bookings/:bookingId/messages",
+            "params": [
+              { "name": "bookingId", "value": "", "type": "path", "description": "The booking identifier." }
+            ]
+          },
+          "docs": "Lists guest messages tied to a booking from the unified inbox. Modeled."
+        },
+        {
+          "info": { "name": "Send a message on a booking (modeled)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.uplisting.io/bookings/:bookingId/messages",
+            "params": [
+              { "name": "bookingId", "value": "", "type": "path", "description": "The booking identifier." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"body\": \"Hi! Your check-in details are attached.\"\n}" }
+          },
+          "docs": "Sends a guest message on a booking via the unified inbox. Modeled."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Webhooks", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List webhook endpoints", "type": "http" },
+          "http": { "method": "GET", "url": "https://connect.uplisting.io/webhooks" },
+          "docs": "Lists registered webhook endpoints. Confirmed webhook mechanism; shape modeled."
+        },
+        {
+          "info": { "name": "Register a webhook endpoint", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.uplisting.io/webhooks",
+            "body": { "type": "json", "data": "{\n  \"url\": \"https://example.com/uplisting/webhook\",\n  \"events\": [\"booking.created\", \"booking.updated\", \"booking.removed\"]\n}" }
+          },
+          "docs": "Registers an endpoint for booking events; must return 2xx within 5s, auto-disabled after 5 consecutive failures. Confirmed behavior."
+        },
+        {
+          "info": { "name": "Delete a webhook endpoint", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.uplisting.io/webhooks/:webhookId",
+            "params": [
+              { "name": "webhookId", "value": "", "type": "path", "description": "The webhook endpoint identifier." }
+            ]
+          },
+          "docs": "Removes a registered webhook endpoint. Confirmed webhook mechanism; shape modeled."
+        }
+      ]
+    }
+  ]
+}

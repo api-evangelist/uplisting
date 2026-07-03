@@ -1,0 +1,115 @@
+aid: uplisting
+name: Uplisting
+review:
+  question: Does Uplisting expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-03'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Uplisting's public integration surface is
+    a request/response REST API (base https://connect.uplisting.io) plus outbound
+    webhooks. The event-driven part - notifications that a booking was created,
+    updated, or removed - is delivered as server-to-endpoint HTTP POST webhooks,
+    not over a WebSocket or SSE channel that clients connect to. There is no
+    documented persistent ws:// or wss:// transport on Uplisting's own API to
+    model, so no AsyncAPI was created.
+findings:
+  summary: |
+    Uplisting does not publish a documented public WebSocket API. Uplisting is
+    short-term / vacation rental management software and a channel manager
+    (Airbnb, Vrbo, Booking.com, plus a direct booking website). Its Public and
+    Partner API is invite-only, request/response REST over HTTPS at base
+    https://connect.uplisting.io, authenticated with HTTP Basic using a
+    Base64-encoded API key generated on the Connect page. Real-time change
+    notification is handled by outbound webhooks (booking created/updated/removed),
+    which are server-initiated HTTP POSTs to a partner endpoint - not a WebSocket.
+    The documented design pattern is: pull a snapshot of bookings/availability
+    over REST, then rely on webhooks for subsequent changes. No realtime,
+    bidirectional, or streaming WebSocket endpoint is documented on Uplisting's
+    API as of the review date.
+  openSource: |
+    Uplisting is a proprietary commercial SaaS product; there is no public
+    open-source server or self-hosted distribution. Uplisting is part of the
+    AirDNA family. API access is gated - partners request an invite from
+    support@uplisting.io, and the full reference lives in an invite-only Postman
+    collection. Staging and production share the same paths on different base
+    domains, with environment-specific accounts and API keys. V2 endpoints
+    additionally require a Client ID partner identifier.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://connect.uplisting.io
+      documented: true
+      note: Public and Partner API - properties, bookings, availability, calendar. HTTP Basic auth with a Base64-encoded API key.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound booking.created / booking.updated / booking.removed events POSTed to a partner endpoint. Must return 2xx within 5s; auto-disabled after 5 consecutive failures. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Uplisting's Public and Partner API as of the review date.
+  endpointsConfirmed:
+    - GET    https://connect.uplisting.io/users/me
+    - GET    https://connect.uplisting.io/properties
+    - GET    https://connect.uplisting.io/bookings
+    - POST   https://connect.uplisting.io/bookings
+    - GET    https://connect.uplisting.io/availability
+    - GET    https://connect.uplisting.io/properties/{propertyId}/calendar
+    - PUT    https://connect.uplisting.io/properties/{propertyId}/calendar
+  endpointsModeled:
+    - GET    https://connect.uplisting.io/properties/{propertyId}
+    - GET    https://connect.uplisting.io/bookings/{bookingId}
+    - PATCH  https://connect.uplisting.io/bookings/{bookingId}
+    - PUT    https://connect.uplisting.io/properties/{propertyId}/rates
+    - GET    https://connect.uplisting.io/guests
+    - GET    https://connect.uplisting.io/guests/{guestId}
+    - GET    https://connect.uplisting.io/bookings/{bookingId}/messages
+    - POST   https://connect.uplisting.io/bookings/{bookingId}/messages
+    - GET    https://connect.uplisting.io/webhooks
+    - POST   https://connect.uplisting.io/webhooks
+    - DELETE https://connect.uplisting.io/webhooks/{webhookId}
+  endpointsNote: |
+    "Confirmed" endpoints correspond to surfaces named in Uplisting's public
+    documentation (the /users/me credential check, the Properties, Bookings,
+    Availability, and Calendar endpoints, and the documented 201/202 behaviors
+    and rate-limit/webhook rules). Exact request/response schemas were not
+    published outside the invite-only Postman collection and are modeled.
+    "Modeled" endpoints (individual resource fetches, Rates, Guests, Messages,
+    and webhook CRUD paths) are honestly-modeled from Uplisting's documented
+    product behavior; verify exact paths under the invite-only reference.
+  authentication:
+    scheme: HTTP Basic
+    detail: Authorization header carries Basic <base64(api_key)>. API keys are generated on the Uplisting Connect page. V2 endpoints additionally require a Client ID.
+  responseCodes:
+    - 200 OK - GET endpoints
+    - 201 Created - most POST create endpoints (for example create booking)
+    - 202 Accepted - calendar update endpoints (asynchronous)
+    - 401 Unauthorized - missing/invalid API key
+    - 429 Too Many Requests - rate limit exceeded
+sources:
+  - url: https://support.uplisting.io/docs/api
+    type: Documentation
+    note: API & Webhooks - Basic auth, base domain, rate limiting (429), webhook rules, invite-only access via support@uplisting.io.
+  - url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
+    type: APIReference
+    note: Public Uplisting API Postman collection (full reference is invite-only/JS-rendered).
+  - url: https://connect.uplisting.io/users/me
+    type: APIReference
+    note: Confirmed base URL and credential-validation endpoint.
+  - url: https://www.uplisting.io/pricing
+    type: Pricing
+    note: Per-listing monthly subscription; account minimum; annual discount; Protect add-on.
+  - url: https://www.linkedin.com/company/uplisting
+    type: LinkedIn
+    note: Company profile; Uplisting is part of the AirDNA family.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists on Uplisting's own API. The API is
+    request/response REST, and its event-driven behavior is delivered by
+    outbound HTTP webhooks (booking created/updated/removed) rather than a
+    client-connected WebSocket or SSE stream. No AsyncAPI document was created
+    because there is no server-push socket transport on Uplisting's API to model.

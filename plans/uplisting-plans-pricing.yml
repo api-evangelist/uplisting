@@ -1,0 +1,115 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Uplisting
+providerId: uplisting
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Vacation Rental
+- Short-Term Rental
+- Channel Manager
+- Property Management
+- Plans
+description: >-
+  Uplisting is sold as a SaaS subscription priced per listing (property) per
+  month, not as a metered API product. The Public and Partner API is included
+  with an Uplisting subscription but is invite-only - partners request access
+  from support@uplisting.io and there is no separate per-call API fee published.
+  The headline plan starts around $20 / EUR 18 / GBP 16 per listing per month
+  with a monthly account minimum (about $100 / GBP 80) for accounts under five
+  properties. Annual billing saves roughly 10 percent. Optional add-ons (for
+  example Protect automated deposits at about $6 per property per month) are
+  billed only for listings where enabled.
+notes: >-
+  Figures are drawn from Uplisting's public pricing page and support docs and
+  are approximate / subject to change; reconcile exact current tiers, currency
+  amounts, and add-on prices at https://www.uplisting.io/pricing during
+  reconciliation. The API has no standalone price - access is gated by invite,
+  not by plan tier.
+sources:
+- https://www.uplisting.io/pricing
+- https://support.uplisting.io/docs/uplisting-pricing
+- https://support.uplisting.io/docs/api
+plans:
+- id: uplisting-pro
+  name: Pro
+  type: paid
+  description: >-
+    Uplisting's core all-in-one plan: channel management across Airbnb, Vrbo,
+    and Booking.com, automated guest messaging, unified inbox, multi-calendar,
+    direct booking website, and access to the Public and Partner API (by
+    invite). Billed per listing per month with a monthly account minimum.
+  entries:
+  - label: Per Listing
+    name: per_listing
+    type: usage
+    metric: listings
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: from $20 / EUR 18 / GBP 16 per listing per month
+    userMultiplied: true
+  - label: Account Minimum
+    name: account_minimum
+    type: flat
+    metric: account
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: about $100 / GBP 80 per month minimum (accounts under 5 properties)
+    userMultiplied: false
+  elements:
+  - name: Channel Management
+  - name: Automated Guest Messaging
+  - name: Unified Inbox
+  - name: Multi-Calendar
+  - name: Direct Booking Website
+  - name: Public and Partner API (invite-only)
+  - name: Webhooks
+  - name: Free 1:1 Onboarding
+- id: uplisting-annual
+  name: Annual Billing
+  type: paid
+  description: >-
+    The Pro plan billed annually rather than monthly for an approximately 10
+    percent discount on the per-listing subscription.
+  entries:
+  - label: Per Listing (Annual)
+    name: per_listing_annual
+    type: usage
+    metric: listings
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: about 10% off the monthly per-listing rate when paid annually
+    userMultiplied: true
+  elements:
+  - name: All Pro Features
+  - name: Discounted Annual Rate
+- id: uplisting-protect-addon
+  name: Protect Add-On
+  type: paid
+  description: >-
+    Optional automated security-deposit handling, billed only for the listings
+    where deposits are enabled.
+  entries:
+  - label: Per Enabled Listing
+    name: protect_per_listing
+    type: usage
+    metric: listings
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: about $6 per property per month (only where enabled)
+    userMultiplied: true
+  elements:
+  - name: Automated Security Deposits
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

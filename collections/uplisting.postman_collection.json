@@ -1,0 +1,234 @@
+{
+  "info": {
+    "name": "Uplisting Public and Partner API",
+    "description": "Uplisting is short-term / vacation rental management software and a channel manager. This collection covers its invite-only Public and Partner REST API. Base URL: https://connect.uplisting.io (production; staging uses the same paths on a different base domain). Auth is HTTP Basic - send Authorization: Basic <base64(api_key)>, with the API key generated on the Uplisting Connect page. V2 endpoints also require a Client ID. Request access from support@uplisting.io. Users, Properties, Bookings, Availability, Calendar, and the webhook behavior are confirmed from public docs; Rates, Guests, and Messages are modeled from documented product behavior.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{apiKey}}", "type": "string" },
+      { "key": "password", "value": "", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://connect.uplisting.io", "type": "string" },
+    { "key": "apiKey", "value": "", "type": "string" },
+    { "key": "clientId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Get the authenticated user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] },
+            "description": "Returns the account/user for the supplied API key. Used to validate credentials. Confirmed endpoint."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "List properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/properties", "host": ["{{baseUrl}}"], "path": ["properties"] },
+            "description": "Lists properties (listings), including the slug used for direct booking links. Confirmed surface."
+          }
+        },
+        {
+          "name": "Get a property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/properties/:propertyId", "host": ["{{baseUrl}}"], "path": ["properties", ":propertyId"], "variable": [{ "key": "propertyId", "value": "" }] },
+            "description": "Retrieves a single property by identifier. Confirmed surface; response fields modeled."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "List bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/bookings?property_id=&check_in_from=&check_in_to=", "host": ["{{baseUrl}}"], "path": ["bookings"], "query": [{ "key": "property_id", "value": "" }, { "key": "check_in_from", "value": "" }, { "key": "check_in_to", "value": "" }] },
+            "description": "Returns a snapshot list of bookings across channels. Use webhooks for subsequent changes. Confirmed surface."
+          }
+        },
+        {
+          "name": "Create a confirmed booking",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"property_id\": \"\",\n  \"check_in\": \"2026-08-01\",\n  \"check_out\": \"2026-08-05\",\n  \"guests\": 2,\n  \"guest\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"email\": \"jane@example.com\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/bookings", "host": ["{{baseUrl}}"], "path": ["bookings"] },
+            "description": "Creates a confirmed booking (returns 201). Confirmed surface; request fields modeled."
+          }
+        },
+        {
+          "name": "Get a booking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/bookings/:bookingId", "host": ["{{baseUrl}}"], "path": ["bookings", ":bookingId"], "variable": [{ "key": "bookingId", "value": "" }] },
+            "description": "Retrieves a single booking by identifier. Confirmed surface; response fields modeled."
+          }
+        },
+        {
+          "name": "Update a booking (modeled)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"cancelled\"\n}" },
+            "url": { "raw": "{{baseUrl}}/bookings/:bookingId", "host": ["{{baseUrl}}"], "path": ["bookings", ":bookingId"], "variable": [{ "key": "bookingId", "value": "" }] },
+            "description": "Updates mutable fields on a booking. Modeled."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Availability",
+      "item": [
+        {
+          "name": "List available properties for a date range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/availability?check_in=2026-08-01&check_out=2026-08-05&guests=2", "host": ["{{baseUrl}}"], "path": ["availability"], "query": [{ "key": "check_in", "value": "2026-08-01" }, { "key": "check_out", "value": "2026-08-05" }, { "key": "guests", "value": "2" }] },
+            "description": "Returns properties available for a date range, optionally filtered by guests. Confirmed surface."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Calendar",
+      "item": [
+        {
+          "name": "Get calendar for a property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/properties/:propertyId/calendar?from=2026-08-01&to=2026-08-31", "host": ["{{baseUrl}}"], "path": ["properties", ":propertyId", "calendar"], "query": [{ "key": "from", "value": "2026-08-01" }, { "key": "to", "value": "2026-08-31" }], "variable": [{ "key": "propertyId", "value": "" }] },
+            "description": "Returns availability, prices, and restrictions for a property over a date range. Confirmed surface."
+          }
+        },
+        {
+          "name": "Update calendar for a property",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"from\": \"2026-08-01\",\n  \"to\": \"2026-08-05\",\n  \"available\": false,\n  \"min_stay\": 3\n}" },
+            "url": { "raw": "{{baseUrl}}/properties/:propertyId/calendar", "host": ["{{baseUrl}}"], "path": ["properties", ":propertyId", "calendar"], "variable": [{ "key": "propertyId", "value": "" }] },
+            "description": "Submits calendar updates; accepted asynchronously (returns 202). Confirmed 202 behavior; request fields modeled."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rates",
+      "item": [
+        {
+          "name": "Update nightly rates for a property (modeled)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"from\": \"2026-08-01\",\n  \"to\": \"2026-08-31\",\n  \"price\": 189.00,\n  \"currency\": \"USD\"\n}" },
+            "url": { "raw": "{{baseUrl}}/properties/:propertyId/rates", "host": ["{{baseUrl}}"], "path": ["properties", ":propertyId", "rates"], "variable": [{ "key": "propertyId", "value": "" }] },
+            "description": "Sets nightly rates per date; propagates to connected channels. Modeled from documented calendar/pricing behavior."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Guests",
+      "item": [
+        {
+          "name": "List guests (modeled)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/guests", "host": ["{{baseUrl}}"], "path": ["guests"] },
+            "description": "Lists guest records tied to bookings. Modeled."
+          }
+        },
+        {
+          "name": "Get a guest (modeled)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/guests/:guestId", "host": ["{{baseUrl}}"], "path": ["guests", ":guestId"], "variable": [{ "key": "guestId", "value": "" }] },
+            "description": "Retrieves a guest, including identity-verification status. Modeled."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "List messages for a booking (modeled)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/bookings/:bookingId/messages", "host": ["{{baseUrl}}"], "path": ["bookings", ":bookingId", "messages"], "variable": [{ "key": "bookingId", "value": "" }] },
+            "description": "Lists guest messages tied to a booking from the unified inbox. Modeled."
+          }
+        },
+        {
+          "name": "Send a message on a booking (modeled)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"body\": \"Hi! Your check-in details are attached.\"\n}" },
+            "url": { "raw": "{{baseUrl}}/bookings/:bookingId/messages", "host": ["{{baseUrl}}"], "path": ["bookings", ":bookingId", "messages"], "variable": [{ "key": "bookingId", "value": "" }] },
+            "description": "Sends a guest message on a booking via the unified inbox. Modeled."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "List webhook endpoints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/webhooks", "host": ["{{baseUrl}}"], "path": ["webhooks"] },
+            "description": "Lists registered webhook endpoints. Confirmed webhook mechanism; shape modeled."
+          }
+        },
+        {
+          "name": "Register a webhook endpoint",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"url\": \"https://example.com/uplisting/webhook\",\n  \"events\": [\"booking.created\", \"booking.updated\", \"booking.removed\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/webhooks", "host": ["{{baseUrl}}"], "path": ["webhooks"] },
+            "description": "Registers an endpoint for booking events. Endpoint must return 2xx within 5s; auto-disabled after 5 consecutive failures. Confirmed behavior."
+          }
+        },
+        {
+          "name": "Delete a webhook endpoint",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/webhooks/:webhookId", "host": ["{{baseUrl}}"], "path": ["webhooks", ":webhookId"], "variable": [{ "key": "webhookId", "value": "" }] },
+            "description": "Removes a registered webhook endpoint. Confirmed webhook mechanism; shape modeled."
+          }
+        }
+      ]
+    }
+  ]
+}
