@@ -160,6 +160,12 @@ apis:
     5 seconds; an endpoint is auto-disabled after 5 consecutive failed deliveries.
     Webhooks are the recommended way to stay in sync after an initial snapshot.
 common:
+- type: DomainSecurity
+  url: security/uplisting-domain-security.yml
+- type: Authentication
+  url: authentication/uplisting-authentication.yml
+- url: https://www.uplisting.io/blog
+  type: Blog
 - type: LinkedIn
   url: https://www.linkedin.com/company/uplisting
 - type: Website

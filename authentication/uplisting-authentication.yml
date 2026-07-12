@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/uplisting-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: 'HTTP Basic auth. Send `Authorization: Basic <base64(api_key)>`, where api_key
+    is generated on the Uplisting Connect page. V2 endpoints also require a Client ID partner
+    identifier.'
+  sources:
+  - openapi/uplisting-openapi.yml
