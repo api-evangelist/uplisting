@@ -160,6 +160,8 @@ apis:
     5 seconds; an endpoint is auto-disabled after 5 consecutive failed deliveries.
     Webhooks are the recommended way to stay in sync after an initial snapshot.
 common:
+- type: AgenticAccess
+  url: agentic-access/uplisting-agentic-access.yml
 - type: DomainSecurity
   url: security/uplisting-domain-security.yml
 - type: Authentication
