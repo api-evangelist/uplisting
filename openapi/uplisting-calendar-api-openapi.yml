@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: Uplisting Public and Partner Account Calendar API
+  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
+
+
+    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
+
+
+    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
+
+
+    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  version: '1.0'
+  contact:
+    name: Uplisting Support
+    url: https://support.uplisting.io/docs/api
+    email: support@uplisting.io
+servers:
+- url: https://connect.uplisting.io
+  description: Production
+security:
+- basicAuth: []
+tags:
+- name: Calendar
+  description: Availability, prices, and restrictions per property and date.
+paths:
+  /properties/{propertyId}/calendar:
+    get:
+      operationId: getCalendar
+      tags:
+      - Calendar
+      summary: Get calendar for a property
+      description: Returns availability, prices, and restrictions (for example minimum stay, closed to arrival/departure) for a property across a date range. Confirmed surface; response fields modeled.
+      parameters:
+      - $ref: '#/components/parameters/PropertyId'
+      - name: from
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: Start date of the calendar window (YYYY-MM-DD).
+      - name: to
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: End date of the calendar window (YYYY-MM-DD).
+      responses:
+        '200':
+          description: Calendar days for the property.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CalendarDay'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+    put:
+      operationId: updateCalendar
+      tags:
+      - Calendar
+      summary: Update calendar for a property
+      description: Submits availability, price, and/or restriction updates for a property over a date range. Calendar updates are accepted asynchronously and return HTTP 202. Confirmed 202 behavior; request fields modeled.
+      parameters:
+      - $ref: '#/components/parameters/PropertyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalendarUpdate'
+      responses:
+        '202':
+          description: The calendar update was accepted for processing.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The property (listing) identifier.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: The request was well-formed but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    CalendarUpdate:
+      type: object
+      description: Calendar update over a date range. Fields modeled.
+      required:
+      - from
+      - to
+      properties:
+        from:
+          type: string
+          format: date
+        to:
+          type: string
+          format: date
+        available:
+          type: boolean
+        price:
+          type: number
+        min_stay:
+          type: integer
+        closed_to_arrival:
+          type: boolean
+        closed_to_departure:
+          type: boolean
+    CalendarDay:
+      type: object
+      description: One day of calendar data for a property. Fields modeled.
+      properties:
+        date:
+          type: string
+          format: date
+        available:
+          type: boolean
+        price:
+          type: number
+        currency:
+          type: string
+        min_stay:
+          type: integer
+        closed_to_arrival:
+          type: boolean
+        closed_to_departure:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: 'HTTP Basic auth. Send `Authorization: Basic <base64(api_key)>`, where api_key is generated on the Uplisting Connect page. V2 endpoints also require a Client ID partner identifier.'

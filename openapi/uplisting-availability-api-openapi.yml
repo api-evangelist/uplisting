@@ -1,0 +1,113 @@
+openapi: 3.0.3
+info:
+  title: Uplisting Public and Partner Account Availability API
+  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
+
+
+    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
+
+
+    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
+
+
+    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  version: '1.0'
+  contact:
+    name: Uplisting Support
+    url: https://support.uplisting.io/docs/api
+    email: support@uplisting.io
+servers:
+- url: https://connect.uplisting.io
+  description: Production
+security:
+- basicAuth: []
+tags:
+- name: Availability
+  description: Properties available for a date range.
+paths:
+  /availability:
+    get:
+      operationId: listAvailability
+      tags:
+      - Availability
+      summary: List available properties for a date range
+      description: Returns the properties that are available for a given check-in / check-out date range, optionally filtered by number of guests. Confirmed surface; query and response fields modeled.
+      parameters:
+      - name: check_in
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: Check-in date (YYYY-MM-DD).
+      - name: check_out
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: Check-out date (YYYY-MM-DD).
+      - name: guests
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+        description: Minimum guest capacity to filter by.
+      responses:
+        '200':
+          description: Properties available for the requested range.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AvailableProperty'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    AvailableProperty:
+      type: object
+      description: A property returned by an availability search. Fields modeled.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        price_total:
+          type: number
+        currency:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: 'HTTP Basic auth. Send `Authorization: Basic <base64(api_key)>`, where api_key is generated on the Uplisting Connect page. V2 endpoints also require a Client ID partner identifier.'

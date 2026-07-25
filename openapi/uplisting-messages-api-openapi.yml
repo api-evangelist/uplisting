@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: Uplisting Public and Partner Account Messages API
+  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
+
+
+    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
+
+
+    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
+
+
+    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  version: '1.0'
+  contact:
+    name: Uplisting Support
+    url: https://support.uplisting.io/docs/api
+    email: support@uplisting.io
+servers:
+- url: https://connect.uplisting.io
+  description: Production
+security:
+- basicAuth: []
+tags:
+- name: Messages
+  description: Guest messaging via the unified inbox (modeled).
+paths:
+  /bookings/{bookingId}/messages:
+    get:
+      operationId: listMessages
+      tags:
+      - Messages
+      summary: List messages for a booking
+      description: Lists guest messages tied to a booking from the unified inbox. Modeled.
+      x-modeled: true
+      parameters:
+      - $ref: '#/components/parameters/BookingId'
+      responses:
+        '200':
+          description: A list of messages.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+    post:
+      operationId: sendMessage
+      tags:
+      - Messages
+      summary: Send a message on a booking
+      description: Sends a guest message on a booking through the unified inbox. Modeled.
+      x-modeled: true
+      parameters:
+      - $ref: '#/components/parameters/BookingId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreate'
+      responses:
+        '201':
+          description: The sent message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  schemas:
+    Message:
+      type: object
+      description: A guest message from the unified inbox. Modeled.
+      properties:
+        id:
+          type: string
+        booking_id:
+          type: string
+        direction:
+          type: string
+          enum:
+          - inbound
+          - outbound
+        channel:
+          type: string
+        body:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    MessageCreate:
+      type: object
+      description: Payload to send a guest message. Modeled.
+      required:
+      - body
+      properties:
+        body:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  responses:
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The booking identifier.
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: 'HTTP Basic auth. Send `Authorization: Basic <base64(api_key)>`, where api_key is generated on the Uplisting Connect page. V2 endpoints also require a Client ID partner identifier.'

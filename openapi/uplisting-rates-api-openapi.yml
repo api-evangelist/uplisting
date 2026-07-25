@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Uplisting Public and Partner Account Rates API
+  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
+
+
+    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
+
+
+    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
+
+
+    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  version: '1.0'
+  contact:
+    name: Uplisting Support
+    url: https://support.uplisting.io/docs/api
+    email: support@uplisting.io
+servers:
+- url: https://connect.uplisting.io
+  description: Production
+security:
+- basicAuth: []
+tags:
+- name: Rates
+  description: Nightly rates and price adjustments (modeled via the calendar).
+paths:
+  /properties/{propertyId}/rates:
+    put:
+      operationId: updateRates
+      tags:
+      - Rates
+      summary: Update nightly rates for a property
+      description: Sets nightly rates / price adjustments per date for a property; updates propagate to connected channels. Modeled from the documented calendar and pricing behavior - rates are surfaced through the calendar in the public product.
+      x-modeled: true
+      parameters:
+      - $ref: '#/components/parameters/PropertyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatesUpdate'
+      responses:
+        '202':
+          description: The rate update was accepted for processing.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The property (listing) identifier.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    RatesUpdate:
+      type: object
+      description: Nightly rate update over a date range. Modeled.
+      required:
+      - from
+      - to
+      - price
+      properties:
+        from:
+          type: string
+          format: date
+        to:
+          type: string
+          format: date
+        price:
+          type: number
+        currency:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: 'HTTP Basic auth. Send `Authorization: Basic <base64(api_key)>`, where api_key is generated on the Uplisting Connect page. V2 endpoints also require a Client ID partner identifier.'

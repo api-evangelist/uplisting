@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: Uplisting Public and Partner Account Guests API
+  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
+
+
+    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
+
+
+    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
+
+
+    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  version: '1.0'
+  contact:
+    name: Uplisting Support
+    url: https://support.uplisting.io/docs/api
+    email: support@uplisting.io
+servers:
+- url: https://connect.uplisting.io
+  description: Production
+security:
+- basicAuth: []
+tags:
+- name: Guests
+  description: Guest records tied to bookings (modeled).
+paths:
+  /guests:
+    get:
+      operationId: listGuests
+      tags:
+      - Guests
+      summary: List guests
+      description: Lists guest records tied to bookings. Modeled.
+      x-modeled: true
+      responses:
+        '200':
+          description: A list of guests.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Guest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /guests/{guestId}:
+    get:
+      operationId: getGuest
+      tags:
+      - Guests
+      summary: Get a guest
+      description: Retrieves a single guest record, including identity-verification status. Modeled.
+      x-modeled: true
+      parameters:
+      - $ref: '#/components/parameters/GuestId'
+      responses:
+        '200':
+          description: The guest.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Guest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    GuestId:
+      name: guestId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The guest identifier.
+  schemas:
+    Guest:
+      type: object
+      description: A guest tied to a booking. Modeled.
+      properties:
+        id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        identity_verified:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: 'HTTP Basic auth. Send `Authorization: Basic <base64(api_key)>`, where api_key is generated on the Uplisting Connect page. V2 endpoints also require a Client ID partner identifier.'

@@ -1,0 +1,291 @@
+openapi: 3.0.3
+info:
+  title: Uplisting Public and Partner Account Bookings API
+  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
+
+
+    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
+
+
+    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
+
+
+    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  version: '1.0'
+  contact:
+    name: Uplisting Support
+    url: https://support.uplisting.io/docs/api
+    email: support@uplisting.io
+servers:
+- url: https://connect.uplisting.io
+  description: Production
+security:
+- basicAuth: []
+tags:
+- name: Bookings
+  description: Reservations across all connected channels.
+paths:
+  /bookings:
+    get:
+      operationId: listBookings
+      tags:
+      - Bookings
+      summary: List bookings
+      description: Returns a snapshot list of bookings across connected channels. Uplisting recommends using this to seed state, then relying on webhooks for subsequent changes. Confirmed surface; query and response fields modeled.
+      parameters:
+      - name: property_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter bookings to a single property.
+      - name: check_in_from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Return bookings with a check-in on or after this date.
+      - name: check_in_to
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Return bookings with a check-in on or before this date.
+      responses:
+        '200':
+          description: A list of bookings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Booking'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+    post:
+      operationId: createBooking
+      tags:
+      - Bookings
+      summary: Create a confirmed booking
+      description: Creates a confirmed booking on a property for a date range. Confirmed surface (returns 201 Created); request/response fields modeled.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingCreate'
+      responses:
+        '201':
+          description: The created booking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /bookings/{bookingId}:
+    get:
+      operationId: getBooking
+      tags:
+      - Bookings
+      summary: Get a booking
+      description: Retrieves a single booking by identifier. Confirmed surface; response fields modeled.
+      parameters:
+      - $ref: '#/components/parameters/BookingId'
+      responses:
+        '200':
+          description: The booking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+    patch:
+      operationId: updateBooking
+      tags:
+      - Bookings
+      summary: Update a booking
+      description: Updates mutable fields on a booking (for example status). Modeled.
+      x-modeled: true
+      parameters:
+      - $ref: '#/components/parameters/BookingId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingUpdate'
+      responses:
+        '200':
+          description: The updated booking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+components:
+  schemas:
+    GuestCreate:
+      type: object
+      description: Guest details supplied when creating a booking. Modeled.
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+    BookingCreate:
+      type: object
+      description: Payload to create a confirmed booking. Fields modeled.
+      required:
+      - property_id
+      - check_in
+      - check_out
+      properties:
+        property_id:
+          type: string
+        check_in:
+          type: string
+          format: date
+        check_out:
+          type: string
+          format: date
+        guests:
+          type: integer
+        guest:
+          $ref: '#/components/schemas/GuestCreate'
+    Guest:
+      type: object
+      description: A guest tied to a booking. Modeled.
+      properties:
+        id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        identity_verified:
+          type: boolean
+    BookingUpdate:
+      type: object
+      description: Mutable booking fields. Modeled.
+      properties:
+        status:
+          type: string
+          enum:
+          - confirmed
+          - cancelled
+    Booking:
+      type: object
+      description: A reservation. Fields modeled.
+      properties:
+        id:
+          type: string
+        property_id:
+          type: string
+        channel:
+          type: string
+          description: Source channel (airbnb, vrbo, booking_com, direct).
+          enum:
+          - airbnb
+          - vrbo
+          - booking_com
+          - direct
+        status:
+          type: string
+          enum:
+          - confirmed
+          - cancelled
+          - pending
+        check_in:
+          type: string
+          format: date
+        check_out:
+          type: string
+          format: date
+        guests:
+          type: integer
+        guest:
+          $ref: '#/components/schemas/Guest'
+        total_price:
+          type: number
+        currency:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: The request was well-formed but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The booking identifier.
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: 'HTTP Basic auth. Send `Authorization: Basic <base64(api_key)>`, where api_key is generated on the Uplisting Connect page. V2 endpoints also require a Client ID partner identifier.'
