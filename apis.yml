@@ -11,7 +11,20 @@ description: Uplisting is short-term and vacation rental management software and
   restrictions), plus webhooks that push booking changes to partner endpoints.
   Authentication is HTTP Basic with a Base64-encoded API key generated on the
   Connect page. Uplisting is part of the AirDNA family.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/uplisting.png
 tags:
 - Vacation Rental
 - Short-Term Rental
@@ -23,142 +36,132 @@ created: '2026-07-03'
 modified: '2026-07-03'
 specificationVersion: '0.19'
 apis:
-- aid: uplisting:uplisting-bookings-api
-  name: Uplisting Bookings API
-  tags:
-  - Bookings
-  - Reservations
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: uplisting:uplisting-account-api
+  name: Uplisting Account API
+  description: Authenticated account/user context.
   humanURL: https://support.uplisting.io/docs/api
   baseURL: https://connect.uplisting.io
-  properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
-    type: APIReference
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: Retrieve a snapshot list of bookings and individual booking detail, and
-    create confirmed bookings, across all connected channels (Airbnb, Vrbo,
-    Booking.com, and the Uplisting direct booking website). Booking changes are then
-    pushed via webhooks. Base URL https://connect.uplisting.io with HTTP Basic auth.
-- aid: uplisting:uplisting-properties-api
-  name: Uplisting Properties API
   tags:
-  - Properties
-  - Listings
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://support.uplisting.io/docs/api
-  baseURL: https://connect.uplisting.io
+  - Account
   properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: List the properties (listings) in an Uplisting account and retrieve
-    detail for a single property, including the property slug used to build direct
-    booking and payment-page links. The recommended way to source a property slug.
+  - type: OpenAPI
+    url: openapi/uplisting-account-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
 - aid: uplisting:uplisting-availability-api
   name: Uplisting Availability API
-  tags:
-  - Availability
-  - Search
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  description: Properties available for a date range.
   humanURL: https://support.uplisting.io/docs/api
   baseURL: https://connect.uplisting.io
+  tags:
+  - Availability
   properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: Return the list of properties that are available for a given date range,
-    optionally filtered by number of guests. Used to power search on the direct
-    booking widget and website.
+  - type: OpenAPI
+    url: openapi/uplisting-availability-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
+- aid: uplisting:uplisting-bookings-api
+  name: Uplisting Bookings API
+  description: Reservations across all connected channels.
+  humanURL: https://support.uplisting.io/docs/api
+  baseURL: https://connect.uplisting.io
+  tags:
+  - Bookings
+  properties:
+  - type: OpenAPI
+    url: openapi/uplisting-bookings-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
 - aid: uplisting:uplisting-calendar-api
   name: Uplisting Calendar API
+  description: Availability, prices, and restrictions per property and date.
+  humanURL: https://support.uplisting.io/docs/api
+  baseURL: https://connect.uplisting.io
   tags:
   - Calendar
-  - Availability
-  - Restrictions
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://support.uplisting.io/docs/api
-  baseURL: https://connect.uplisting.io
   properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: Retrieve availability, prices, and restrictions (minimum stay, closed
-    to arrival/departure) for a property across a date range, and submit calendar
-    updates. Calendar update calls are accepted asynchronously (HTTP 202).
-- aid: uplisting:uplisting-rates-api
-  name: Uplisting Rates API
-  tags:
-  - Rates
-  - Pricing
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://support.uplisting.io/docs/api
-  baseURL: https://connect.uplisting.io
-  properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: Read and push nightly rates and price adjustments per property and date,
-    delivered through the calendar surface. Rate updates propagate out to the
-    connected channels. Endpoint shapes are modeled from the documented calendar and
-    pricing behavior; confirm exact paths under the invite-only reference.
+  - type: OpenAPI
+    url: openapi/uplisting-calendar-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
 - aid: uplisting:uplisting-guests-api
   name: Uplisting Guests API
+  description: Guest records tied to bookings (modeled).
+  humanURL: https://support.uplisting.io/docs/api
+  baseURL: https://connect.uplisting.io
   tags:
   - Guests
-  - Contacts
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://support.uplisting.io/docs/api
-  baseURL: https://connect.uplisting.io
   properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: Read guest records associated with bookings - name, contact details,
-    and identity-verification status. Guest resources are modeled from Uplisting's
-    documented booking and guest-verification features; confirm exact paths under the
-    invite-only reference.
+  - type: OpenAPI
+    url: openapi/uplisting-guests-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
 - aid: uplisting:uplisting-messages-api
   name: Uplisting Messages API
+  description: Guest messaging via the unified inbox (modeled).
+  humanURL: https://support.uplisting.io/docs/api
+  baseURL: https://connect.uplisting.io
   tags:
   - Messages
-  - Unified Inbox
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  properties:
+  - type: OpenAPI
+    url: openapi/uplisting-messages-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
+- aid: uplisting:uplisting-properties-api
+  name: Uplisting Properties API
+  description: Properties (listings) in the account.
   humanURL: https://support.uplisting.io/docs/api
   baseURL: https://connect.uplisting.io
+  tags:
+  - Properties
   properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: Read and send guest messages tied to a booking through Uplisting's
-    unified inbox, which consolidates Airbnb, Vrbo, and Booking.com conversations.
-    Message resources are modeled from the documented automated-messaging and inbox
-    features; confirm exact paths under the invite-only reference.
+  - type: OpenAPI
+    url: openapi/uplisting-properties-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
+- aid: uplisting:uplisting-rates-api
+  name: Uplisting Rates API
+  description: Nightly rates and price adjustments (modeled via the calendar).
+  humanURL: https://support.uplisting.io/docs/api
+  baseURL: https://connect.uplisting.io
+  tags:
+  - Rates
+  properties:
+  - type: OpenAPI
+    url: openapi/uplisting-rates-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
 - aid: uplisting:uplisting-webhooks-api
   name: Uplisting Webhooks API
-  tags:
-  - Webhooks
-  - Events
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  description: Endpoints that receive booking change events.
   humanURL: https://support.uplisting.io/docs/api
   baseURL: https://connect.uplisting.io
+  tags:
+  - Webhooks
   properties:
-  - url: https://support.uplisting.io/docs/api
-    type: Documentation
-  - url: openapi/uplisting-openapi.yml
-    type: OpenAPI
-  description: Register, list, and remove webhook endpoints that receive booking
-    created, updated, and removed events. Endpoints must return a 2xx response within
-    5 seconds; an endpoint is auto-disabled after 5 consecutive failed deliveries.
-    Webhooks are the recommended way to stay in sync after an initial snapshot.
+  - type: OpenAPI
+    url: openapi/uplisting-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://support.uplisting.io/docs/api
+  - type: APIReference
+    url: https://documenter.getpostman.com/view/1320372/SWTBfdW6
 common:
 - type: AgenticAccess
   url: agentic-access/uplisting-agentic-access.yml
