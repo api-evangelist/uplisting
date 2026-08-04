@@ -1,0 +1,30 @@
+{
+  "provider": "uplisting",
+  "sources": [
+    "uplisting-account-api-openapi.yml",
+    "uplisting-availability-api-openapi.yml",
+    "uplisting-bookings-api-openapi.yml",
+    "uplisting-calendar-api-openapi.yml",
+    "uplisting-guests-api-openapi.yml",
+    "uplisting-messages-api-openapi.yml",
+    "uplisting-properties-api-openapi.yml",
+    "uplisting-rates-api-openapi.yml",
+    "uplisting-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "uplisting-account-api-openapi.yml",
+    "uplisting-availability-api-openapi.yml",
+    "uplisting-bookings-api-openapi.yml",
+    "uplisting-calendar-api-openapi.yml",
+    "uplisting-guests-api-openapi.yml",
+    "uplisting-messages-api-openapi.yml",
+    "uplisting-properties-api-openapi.yml",
+    "uplisting-rates-api-openapi.yml",
+    "uplisting-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
