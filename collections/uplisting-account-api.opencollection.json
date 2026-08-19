@@ -1,0 +1,36 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the authenticated user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/users/me"
+          },
+          "docs": "Returns the account/user associated with the supplied API key. Commonly used to validate credentials and discover account context. Confirmed endpoint."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

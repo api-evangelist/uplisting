@@ -1,0 +1,113 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account Bookings API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Bookings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List bookings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/bookings",
+            "params": [
+              {
+                "name": "property_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter bookings to a single property."
+              },
+              {
+                "name": "check_in_from",
+                "value": "",
+                "type": "query",
+                "description": "Return bookings with a check-in on or after this date."
+              },
+              {
+                "name": "check_in_to",
+                "value": "",
+                "type": "query",
+                "description": "Return bookings with a check-in on or before this date."
+              }
+            ]
+          },
+          "docs": "Returns a snapshot list of bookings across connected channels. Uplisting recommends using this to seed state, then relying on webhooks for subsequent changes. Confirmed surface; query and response fields modeled."
+        },
+        {
+          "info": {
+            "name": "Create a confirmed booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.uplisting.io/bookings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a confirmed booking on a property for a date range. Confirmed surface (returns 201 Created); request/response fields modeled."
+        },
+        {
+          "info": {
+            "name": "Get a booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/bookings/:bookingId",
+            "params": [
+              {
+                "name": "bookingId",
+                "value": "",
+                "type": "path",
+                "description": "The booking identifier."
+              }
+            ]
+          },
+          "docs": "Retrieves a single booking by identifier. Confirmed surface; response fields modeled."
+        },
+        {
+          "info": {
+            "name": "Update a booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://connect.uplisting.io/bookings/:bookingId",
+            "params": [
+              {
+                "name": "bookingId",
+                "value": "",
+                "type": "path",
+                "description": "The booking identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates mutable fields on a booking (for example status). Modeled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

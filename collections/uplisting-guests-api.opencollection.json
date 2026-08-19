@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account Guests API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Guests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List guests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/guests"
+          },
+          "docs": "Lists guest records tied to bookings. Modeled."
+        },
+        {
+          "info": {
+            "name": "Get a guest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/guests/:guestId",
+            "params": [
+              {
+                "name": "guestId",
+                "value": "",
+                "type": "path",
+                "description": "The guest identifier."
+              }
+            ]
+          },
+          "docs": "Retrieves a single guest record, including identity-verification status. Modeled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

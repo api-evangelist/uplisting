@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account Messages API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Messages",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List messages for a booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/bookings/:bookingId/messages",
+            "params": [
+              {
+                "name": "bookingId",
+                "value": "",
+                "type": "path",
+                "description": "The booking identifier."
+              }
+            ]
+          },
+          "docs": "Lists guest messages tied to a booking from the unified inbox. Modeled."
+        },
+        {
+          "info": {
+            "name": "Send a message on a booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.uplisting.io/bookings/:bookingId/messages",
+            "params": [
+              {
+                "name": "bookingId",
+                "value": "",
+                "type": "path",
+                "description": "The booking identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends a guest message on a booking through the unified inbox. Modeled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

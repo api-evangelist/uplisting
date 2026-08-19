@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account Rates API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Rates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update nightly rates for a property",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.uplisting.io/properties/:propertyId/rates",
+            "params": [
+              {
+                "name": "propertyId",
+                "value": "",
+                "type": "path",
+                "description": "The property (listing) identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets nightly rates / price adjustments per date for a property; updates propagate to connected channels. Modeled from the documented calendar and pricing behavior - rates are surfaced through the calendar in the public product."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

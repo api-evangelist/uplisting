@@ -1,0 +1,79 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account Calendar API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Calendar",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get calendar for a property",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/properties/:propertyId/calendar",
+            "params": [
+              {
+                "name": "propertyId",
+                "value": "",
+                "type": "path",
+                "description": "The property (listing) identifier."
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Start date of the calendar window (YYYY-MM-DD)."
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "End date of the calendar window (YYYY-MM-DD)."
+              }
+            ]
+          },
+          "docs": "Returns availability, prices, and restrictions (for example minimum stay, closed to arrival/departure) for a property across a date range. Confirmed surface; response fields modeled."
+        },
+        {
+          "info": {
+            "name": "Update calendar for a property",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.uplisting.io/properties/:propertyId/calendar",
+            "params": [
+              {
+                "name": "propertyId",
+                "value": "",
+                "type": "path",
+                "description": "The property (listing) identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submits availability, price, and/or restriction updates for a property over a date range. Calendar updates are accepted asynchronously and return HTTP 202. Confirmed 202 behavior; request fields modeled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

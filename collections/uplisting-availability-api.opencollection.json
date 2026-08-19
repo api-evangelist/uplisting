@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account Availability API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Availability",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List available properties for a date range",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/availability",
+            "params": [
+              {
+                "name": "check_in",
+                "value": "",
+                "type": "query",
+                "description": "Check-in date (YYYY-MM-DD)."
+              },
+              {
+                "name": "check_out",
+                "value": "",
+                "type": "query",
+                "description": "Check-out date (YYYY-MM-DD)."
+              },
+              {
+                "name": "guests",
+                "value": "",
+                "type": "query",
+                "description": "Minimum guest capacity to filter by."
+              }
+            ]
+          },
+          "docs": "Returns the properties that are available for a given check-in / check-out date range, optionally filtered by number of guests. Confirmed surface; query and response fields modeled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

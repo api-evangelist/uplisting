@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Uplisting Public and Partner Account Webhooks API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhook endpoints",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.uplisting.io/webhooks"
+          },
+          "docs": "Lists the registered webhook endpoints for the account. Confirmed webhook mechanism; shape modeled."
+        },
+        {
+          "info": {
+            "name": "Register a webhook endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.uplisting.io/webhooks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers an endpoint to receive booking created, updated, and removed events. The endpoint must return a 2xx within 5 seconds; after 5 consecutive delivery failures it is auto-disabled. Confirmed behavior; request/response fields modeled."
+        },
+        {
+          "info": {
+            "name": "Delete a webhook endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.uplisting.io/webhooks/:webhookId",
+            "params": [
+              {
+                "name": "webhookId",
+                "value": "",
+                "type": "path",
+                "description": "The webhook endpoint identifier."
+              }
+            ]
+          },
+          "docs": "Removes a registered webhook endpoint. Confirmed webhook mechanism; shape modeled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
