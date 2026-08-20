@@ -112,6 +112,8 @@ apis:
   humanURL: https://support.uplisting.io/docs/api
   baseURL: https://connect.uplisting.io
   tags:
+  - Message
+  tags_raw:
   - Messages
   properties:
   - type: OpenAPI
@@ -154,6 +156,8 @@ apis:
   humanURL: https://support.uplisting.io/docs/api
   baseURL: https://connect.uplisting.io
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
