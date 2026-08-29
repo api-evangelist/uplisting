@@ -11,6 +11,18 @@ description: Uplisting is short-term and vacation rental management software and
   restrictions), plus webhooks that push booking changes to partner endpoints.
   Authentication is HTTP Basic with a Base64-encoded API key generated on the
   Connect page. Uplisting is part of the AirDNA family.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
