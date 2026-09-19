@@ -38,6 +38,13 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/uplisting.png
 tags:
+- Vacation Rentals
+- Short-Term Rental
+- Channel Manager
+- Property Management
+- Booking
+- Hospitality
+tags_raw:
 - Vacation Rental
 - Short-Term Rental
 - Channel Manager
@@ -82,6 +89,8 @@ apis:
   humanURL: https://support.uplisting.io/docs/api
   baseURL: https://connect.uplisting.io
   tags:
+  - Booking
+  tags_raw:
   - Bookings
   properties:
   - type: OpenAPI
