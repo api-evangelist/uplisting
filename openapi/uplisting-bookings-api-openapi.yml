@@ -1,16 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Uplisting Public and Partner Account Bookings API
-  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
-
-
-    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
-
-
-    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
-
-
-    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  title: Uplisting Public and Partner Bookings API
+  description: Uplisting is short-term / vacation rental management software and a channel manager.
   version: '1.0'
   contact:
     name: Uplisting Support
@@ -146,18 +137,21 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
-    GuestCreate:
+    BookingUpdate:
       type: object
-      description: Guest details supplied when creating a booking. Modeled.
+      description: Mutable booking fields. Modeled.
       properties:
-        first_name:
+        status:
           type: string
-        last_name:
+          enum:
+          - confirmed
+          - cancelled
+    Error:
+      type: object
+      properties:
+        error:
           type: string
-        email:
-          type: string
-          format: email
-        phone:
+        message:
           type: string
     BookingCreate:
       type: object
@@ -196,15 +190,6 @@ components:
           type: string
         identity_verified:
           type: boolean
-    BookingUpdate:
-      type: object
-      description: Mutable booking fields. Modeled.
-      properties:
-        status:
-          type: string
-          enum:
-          - confirmed
-          - cancelled
     Booking:
       type: object
       description: A reservation. Fields modeled.
@@ -244,22 +229,22 @@ components:
         created_at:
           type: string
           format: date-time
-    Error:
+    GuestCreate:
       type: object
+      description: Guest details supplied when creating a booking. Modeled.
       properties:
-        error:
+        first_name:
           type: string
-        message:
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
           type: string
   responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequests:
-      description: Rate limit exceeded. Back off and retry.
+    UnprocessableEntity:
+      description: The request was well-formed but failed validation.
       content:
         application/json:
           schema:
@@ -270,8 +255,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    UnprocessableEntity:
-      description: The request was well-formed but failed validation.
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
       content:
         application/json:
           schema:

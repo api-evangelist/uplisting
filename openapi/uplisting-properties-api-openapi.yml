@@ -1,16 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Uplisting Public and Partner Account Properties API
-  description: 'Uplisting is short-term / vacation rental management software and a channel manager. This OpenAPI describes Uplisting''s invite-only Public and Partner REST API, which lets partners read properties, bookings, availability, and calendar data (prices and restrictions), create confirmed bookings, and register webhooks that push booking changes.
-
-
-    Base URL: https://connect.uplisting.io (production). Staging uses the same paths on a different base domain; accounts and API keys are environment-specific.
-
-
-    Authentication is HTTP Basic: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Connect page in the Uplisting app. V2 endpoints additionally require a Client ID (partner identifier). API access is invite-only - request access from support@uplisting.io.
-
-
-    Grounding note: the Users, Properties, Bookings, Availability, and Calendar surfaces and the webhook behavior are confirmed from Uplisting''s public documentation. The exact request/response schemas and the Rates, Guests, and Messages resources are MODELED from Uplisting''s documented product behavior because the full reference is behind an invite-only Postman collection. Operations that are modeled are marked with `x-modeled: true`.'
+  title: Uplisting Public and Partner Properties API
+  description: Uplisting is short-term / vacation rental management software and a channel manager.
   version: '1.0'
   contact:
     name: Uplisting Support
@@ -71,15 +62,13 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests'
 components:
-  parameters:
-    PropertyId:
-      name: propertyId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The property (listing) identifier.
   responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     NotFound:
       description: The requested resource was not found.
       content:
@@ -92,13 +81,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
     Property:
       type: object
       description: A property (listing). Fields modeled.
@@ -121,13 +111,14 @@ components:
           example: USD
         active:
           type: boolean
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The property (listing) identifier.
   securitySchemes:
     basicAuth:
       type: http

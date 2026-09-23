@@ -1,0 +1,1 @@
+{"resource":"https://connect.uplisting.io/mcp","authorization_servers":["https://connect.uplisting.io"],"scopes_supported":["properties:read","bookings:read","bookings:create","bookings:update","calendar:read","calendar:write","messaging:read","messaging:write","reviews:read","offline_access"],"bearer_methods_supported":["header"]}
