@@ -49,6 +49,13 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
     User:
       type: object
       description: The authenticated account/user. Fields modeled.
@@ -61,13 +68,6 @@ components:
           type: string
           format: email
         account_id:
-          type: string
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
           type: string
   securitySchemes:
     basicAuth:

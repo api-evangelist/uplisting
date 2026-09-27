@@ -70,6 +70,13 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
     Message:
       type: object
       description: A guest message from the unified inbox. Modeled.
@@ -90,13 +97,6 @@ components:
         created_at:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
     MessageCreate:
       type: object
       description: Payload to send a guest message. Modeled.
@@ -106,14 +106,14 @@ components:
         body:
           type: string
   responses:
-    Unauthorized:
-      description: Missing or invalid API key.
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    TooManyRequests:
-      description: Rate limit exceeded. Back off and retry.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
