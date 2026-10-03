@@ -137,17 +137,12 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
-    Error:
+    Guest:
       type: object
+      description: A guest tied to a booking. Modeled.
       properties:
-        error:
+        id:
           type: string
-        message:
-          type: string
-    GuestCreate:
-      type: object
-      description: Guest details supplied when creating a booking. Modeled.
-      properties:
         first_name:
           type: string
         last_name:
@@ -157,6 +152,44 @@ components:
           format: email
         phone:
           type: string
+        identity_verified:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+    BookingUpdate:
+      type: object
+      description: Mutable booking fields. Modeled.
+      properties:
+        status:
+          type: string
+          enum:
+          - confirmed
+          - cancelled
+    BookingCreate:
+      type: object
+      description: Payload to create a confirmed booking. Fields modeled.
+      required:
+      - property_id
+      - check_in
+      - check_out
+      properties:
+        property_id:
+          type: string
+        check_in:
+          type: string
+          format: date
+        check_out:
+          type: string
+          format: date
+        guests:
+          type: integer
+        guest:
+          $ref: '#/components/schemas/GuestCreate'
     Booking:
       type: object
       description: A reservation. Fields modeled.
@@ -196,12 +229,10 @@ components:
         created_at:
           type: string
           format: date-time
-    Guest:
+    GuestCreate:
       type: object
-      description: A guest tied to a booking. Modeled.
+      description: Guest details supplied when creating a booking. Modeled.
       properties:
-        id:
-          type: string
         first_name:
           type: string
         last_name:
@@ -211,44 +242,15 @@ components:
           format: email
         phone:
           type: string
-        identity_verified:
-          type: boolean
-    BookingCreate:
-      type: object
-      description: Payload to create a confirmed booking. Fields modeled.
-      required:
-      - property_id
-      - check_in
-      - check_out
-      properties:
-        property_id:
-          type: string
-        check_in:
-          type: string
-          format: date
-        check_out:
-          type: string
-          format: date
-        guests:
-          type: integer
-        guest:
-          $ref: '#/components/schemas/GuestCreate'
-    BookingUpdate:
-      type: object
-      description: Mutable booking fields. Modeled.
-      properties:
-        status:
-          type: string
-          enum:
-          - confirmed
-          - cancelled
+  parameters:
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The booking identifier.
   responses:
-    UnprocessableEntity:
-      description: The request was well-formed but failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     TooManyRequests:
       description: Rate limit exceeded. Back off and retry.
       content:
@@ -261,20 +263,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: The request was well-formed but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    BookingId:
-      name: bookingId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The booking identifier.
   securitySchemes:
     basicAuth:
       type: http

@@ -82,6 +82,25 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
+    Webhook:
+      type: object
+      description: A registered webhook endpoint. Fields modeled.
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+            enum:
+            - booking.created
+            - booking.updated
+            - booking.removed
+        enabled:
+          type: boolean
     Error:
       type: object
       properties:
@@ -106,25 +125,14 @@ components:
             - booking.created
             - booking.updated
             - booking.removed
-    Webhook:
-      type: object
-      description: A registered webhook endpoint. Fields modeled.
-      properties:
-        id:
-          type: string
-        url:
-          type: string
-          format: uri
-        events:
-          type: array
-          items:
-            type: string
-            enum:
-            - booking.created
-            - booking.updated
-            - booking.removed
-        enabled:
-          type: boolean
+  parameters:
+    WebhookId:
+      name: webhookId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The webhook endpoint identifier.
   responses:
     TooManyRequests:
       description: Rate limit exceeded. Back off and retry.
@@ -144,14 +152,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    WebhookId:
-      name: webhookId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The webhook endpoint identifier.
   securitySchemes:
     basicAuth:
       type: http

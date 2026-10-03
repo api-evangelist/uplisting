@@ -83,6 +83,14 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests'
 components:
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The property (listing) identifier.
   schemas:
     Error:
       type: object
@@ -91,25 +99,6 @@ components:
           type: string
         message:
           type: string
-    CalendarDay:
-      type: object
-      description: One day of calendar data for a property. Fields modeled.
-      properties:
-        date:
-          type: string
-          format: date
-        available:
-          type: boolean
-        price:
-          type: number
-        currency:
-          type: string
-        min_stay:
-          type: integer
-        closed_to_arrival:
-          type: boolean
-        closed_to_departure:
-          type: boolean
     CalendarUpdate:
       type: object
       description: Calendar update over a date range. Fields modeled.
@@ -133,13 +122,26 @@ components:
           type: boolean
         closed_to_departure:
           type: boolean
+    CalendarDay:
+      type: object
+      description: One day of calendar data for a property. Fields modeled.
+      properties:
+        date:
+          type: string
+          format: date
+        available:
+          type: boolean
+        price:
+          type: number
+        currency:
+          type: string
+        min_stay:
+          type: integer
+        closed_to_arrival:
+          type: boolean
+        closed_to_departure:
+          type: boolean
   responses:
-    UnprocessableEntity:
-      description: The request was well-formed but failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     TooManyRequests:
       description: Rate limit exceeded. Back off and retry.
       content:
@@ -152,20 +154,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: The request was well-formed but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    PropertyId:
-      name: propertyId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The property (listing) identifier.
   securitySchemes:
     basicAuth:
       type: http

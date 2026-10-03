@@ -65,13 +65,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
     Guest:
       type: object
       description: A guest tied to a booking. Modeled.
@@ -89,14 +82,13 @@ components:
           type: string
         identity_verified:
           type: boolean
-  parameters:
-    GuestId:
-      name: guestId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The guest identifier.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
   responses:
     TooManyRequests:
       description: Rate limit exceeded. Back off and retry.
@@ -116,6 +108,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    GuestId:
+      name: guestId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The guest identifier.
   securitySchemes:
     basicAuth:
       type: http

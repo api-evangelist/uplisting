@@ -70,13 +70,6 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
     Message:
       type: object
       description: A guest message from the unified inbox. Modeled.
@@ -105,6 +98,21 @@ components:
       properties:
         body:
           type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  parameters:
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The booking identifier.
   responses:
     TooManyRequests:
       description: Rate limit exceeded. Back off and retry.
@@ -118,14 +126,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    BookingId:
-      name: bookingId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The booking identifier.
   securitySchemes:
     basicAuth:
       type: http

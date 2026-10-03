@@ -62,6 +62,14 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests'
 components:
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The property (listing) identifier.
   schemas:
     Error:
       type: object
@@ -111,14 +119,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    PropertyId:
-      name: propertyId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The property (listing) identifier.
   securitySchemes:
     basicAuth:
       type: http
