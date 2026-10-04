@@ -82,6 +82,23 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
+    WebhookCreate:
+      type: object
+      description: Payload to register a webhook endpoint. Fields modeled.
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+            enum:
+            - booking.created
+            - booking.updated
+            - booking.removed
     Webhook:
       type: object
       description: A registered webhook endpoint. Fields modeled.
@@ -108,40 +125,15 @@ components:
           type: string
         message:
           type: string
-    WebhookCreate:
-      type: object
-      description: Payload to register a webhook endpoint. Fields modeled.
-      required:
-      - url
-      properties:
-        url:
-          type: string
-          format: uri
-        events:
-          type: array
-          items:
-            type: string
-            enum:
-            - booking.created
-            - booking.updated
-            - booking.removed
-  parameters:
-    WebhookId:
-      name: webhookId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The webhook endpoint identifier.
   responses:
-    TooManyRequests:
-      description: Rate limit exceeded. Back off and retry.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
       content:
         application/json:
           schema:
@@ -152,6 +144,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    WebhookId:
+      name: webhookId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The webhook endpoint identifier.
   securitySchemes:
     basicAuth:
       type: http
