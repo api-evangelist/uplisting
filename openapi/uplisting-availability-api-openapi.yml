@@ -63,14 +63,14 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   responses:
-    TooManyRequests:
-      description: Rate limit exceeded. Back off and retry.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
       content:
         application/json:
           schema:

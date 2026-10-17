@@ -137,15 +137,43 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
 components:
   schemas:
-    BookingUpdate:
+    GuestCreate:
       type: object
-      description: Mutable booking fields. Modeled.
+      description: Guest details supplied when creating a booking. Modeled.
       properties:
-        status:
+        first_name:
           type: string
-          enum:
-          - confirmed
-          - cancelled
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+    Guest:
+      type: object
+      description: A guest tied to a booking. Modeled.
+      properties:
+        id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        identity_verified:
+          type: boolean
     Booking:
       type: object
       description: A reservation. Fields modeled.
@@ -205,60 +233,24 @@ components:
           type: integer
         guest:
           $ref: '#/components/schemas/GuestCreate'
-    Guest:
+    BookingUpdate:
       type: object
-      description: A guest tied to a booking. Modeled.
+      description: Mutable booking fields. Modeled.
       properties:
-        id:
+        status:
           type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-        identity_verified:
-          type: boolean
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
-    GuestCreate:
-      type: object
-      description: Guest details supplied when creating a booking. Modeled.
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-  parameters:
-    BookingId:
-      name: bookingId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The booking identifier.
+          enum:
+          - confirmed
+          - cancelled
   responses:
-    NotFound:
-      description: The requested resource was not found.
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    TooManyRequests:
-      description: Rate limit exceeded. Back off and retry.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -275,6 +267,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The booking identifier.
   securitySchemes:
     basicAuth:
       type: http

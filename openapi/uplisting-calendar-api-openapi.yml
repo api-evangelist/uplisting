@@ -83,14 +83,6 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests'
 components:
-  parameters:
-    PropertyId:
-      name: propertyId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The property (listing) identifier.
   schemas:
     CalendarUpdate:
       type: object
@@ -115,6 +107,13 @@ components:
           type: boolean
         closed_to_departure:
           type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
     CalendarDay:
       type: object
       description: One day of calendar data for a property. Fields modeled.
@@ -134,22 +133,15 @@ components:
           type: boolean
         closed_to_departure:
           type: boolean
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
   responses:
-    NotFound:
-      description: The requested resource was not found.
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    TooManyRequests:
-      description: Rate limit exceeded. Back off and retry.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -166,6 +158,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The property (listing) identifier.
   securitySchemes:
     basicAuth:
       type: http

@@ -69,15 +69,28 @@ paths:
         '429':
           $ref: '#/components/responses/TooManyRequests'
 components:
+  responses:
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The booking identifier.
   schemas:
-    MessageCreate:
-      type: object
-      description: Payload to send a guest message. Modeled.
-      required:
-      - body
-      properties:
-        body:
-          type: string
     Error:
       type: object
       properties:
@@ -105,27 +118,14 @@ components:
         created_at:
           type: string
           format: date-time
-  parameters:
-    BookingId:
-      name: bookingId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The booking identifier.
-  responses:
-    TooManyRequests:
-      description: Rate limit exceeded. Back off and retry.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    MessageCreate:
+      type: object
+      description: Payload to send a guest message. Modeled.
+      required:
+      - body
+      properties:
+        body:
+          type: string
   securitySchemes:
     basicAuth:
       type: http
