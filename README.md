@@ -1,4 +1,4 @@
-# Uplisting (uplisting)
+# Uplisting
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,196 +64,141 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Uplisting is short-term and vacation rental management software and a channel manager for professional hosts and property managers. It syncs listings, bookings, availability, rates, and guest messaging across Airbnb, Vrbo, and Booking.com, and powers a direct booking website and unified inbox. Uplisting exposes an invite-only Public and Partner REST API at `https://connect.uplisting.io` for reading properties, bookings, availability, and calendar (prices and restrictions), creating confirmed bookings, and registering webhooks that push booking changes. Authentication is HTTP Basic with a Base64-encoded API key generated on the Connect page. Uplisting is part of the AirDNA family.
+Uplisting is short-term and vacation rental management software and a channel manager for professional hosts and property managers. It syncs listings, bookings, availability, rates, and guest messaging across Airbnb, Vrbo, and Booking.com, and powers a direct booking website and unified inbox. Uplisting exposes an invite-only Public and Partner REST API at https://connect.uplisting.io for reading properties, bookings, availability, and calendar (prices and restrictions), plus webhooks that push booking changes to partner endpoints. Authentication is HTTP Basic with a Base64-encoded API key generated on the Connect page. Uplisting is part of the AirDNA family.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/uplisting/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/uplisting/refs/heads/main/apis.yml)
+**Areas:** Vacation Rentals · Short-Term Rental · Channel Manager · Property Management · Booking · Hospitality
 
-> **API access is invite-only.** Request access and the full reference (an invite-only Postman collection) from support@uplisting.io. The Users, Properties, Bookings, Availability, and Calendar surfaces plus the webhook, rate-limit, and response-code behaviors below are confirmed from Uplisting's public documentation. Individual-resource fetches and the Rates, Guests, and Messages resources are honestly modeled from Uplisting's documented product behavior and marked as such.
+## Uplisting on APIs.io
 
-## Tags
+Everything profiled for Uplisting is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/uplisting/](https://apis.io/providers/uplisting/)** — or go straight to one of the APIs or properties below.
 
-- Vacation Rental
-- Short-Term Rental
-- Channel Manager
-- Property Management
-- Bookings
-- Hospitality
+### APIs (9)
 
-## Timestamps
+- [Uplisting Account API](https://apis.io/apis/uplisting/uplisting-account-api/) — Authenticated account/user context.
+- [Uplisting Availability API](https://apis.io/apis/uplisting/uplisting-availability-api/) — Properties available for a date range.
+- [Uplisting Bookings API](https://apis.io/apis/uplisting/uplisting-bookings-api/) — Reservations across all connected channels.
+- [Uplisting Calendar API](https://apis.io/apis/uplisting/uplisting-calendar-api/) — Availability, prices, and restrictions per property and date.
+- [Uplisting Guests API](https://apis.io/apis/uplisting/uplisting-guests-api/) — Guest records tied to bookings (modeled).
+- [Uplisting Messages API](https://apis.io/apis/uplisting/uplisting-messages-api/) — Guest messaging via the unified inbox (modeled).
+- [Uplisting Properties API](https://apis.io/apis/uplisting/uplisting-properties-api/) — Properties (listings) in the account.
+- [Uplisting Rates API](https://apis.io/apis/uplisting/uplisting-rates-api/) — Nightly rates and price adjustments (modeled via the calendar).
+- [Uplisting Webhooks API](https://apis.io/apis/uplisting/uplisting-webhooks-api/) — Endpoints that receive booking change events.
 
-- **Created:** 2026-07-03
-- **Modified:** 2026-07-03
+### Published properties
 
-## Authentication
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-HTTP Basic auth: send `Authorization: Basic <base64(api_key)>`. API keys are generated on the Uplisting Connect page. V2 endpoints additionally require a Client ID partner identifier. Staging and production share the same paths on different base domains, with environment-specific accounts and keys.
+#### MCP servers (1)
 
-## APIs
+Model Context Protocol servers that expose the API to agents.
 
-### Uplisting Bookings API
+- [uplisting](https://apis.io/servers/uplisting/uplisting/)
 
-Retrieve a snapshot list of bookings and individual booking detail, and create confirmed bookings, across all connected channels (Airbnb, Vrbo, Booking.com, and the Uplisting direct booking website). Booking changes are then pushed via webhooks.
+#### Agentic access (1)
 
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Uplisting Agentic Access](https://apis.io/agentic-access/uplisting/uplisting-agentic-access/)
 
-- Bookings
-- Reservations
+#### Collections (10)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://support.uplisting.io/docs/api)
-- [API Reference](https://documenter.getpostman.com/view/1320372/SWTBfdW6)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Uplisting Public and Partner API](https://apis.io/collections/uplisting/open-uplisting/)
+- [Uplisting Public and Partner Account API](https://apis.io/collections/uplisting/open-uplisting-account-api/)
+- [Uplisting Public and Partner Account Availability API](https://apis.io/collections/uplisting/open-uplisting-availability-api/)
+- [Uplisting Public and Partner Account Bookings API](https://apis.io/collections/uplisting/open-uplisting-bookings-api/)
+- [Uplisting Public and Partner Account Calendar API](https://apis.io/collections/uplisting/open-uplisting-calendar-api/)
+- [Uplisting Public and Partner Account Guests API](https://apis.io/collections/uplisting/open-uplisting-guests-api/)
+- [Uplisting Public and Partner Account Messages API](https://apis.io/collections/uplisting/open-uplisting-messages-api/)
+- [Uplisting Public and Partner Account Properties API](https://apis.io/collections/uplisting/open-uplisting-properties-api/)
+- [Uplisting Public and Partner Account Rates API](https://apis.io/collections/uplisting/open-uplisting-rates-api/)
+- [Uplisting Public and Partner Account Webhooks API](https://apis.io/collections/uplisting/open-uplisting-webhooks-api/)
 
-### Uplisting Properties API
+#### Security (2)
 
-List the properties (listings) in an Uplisting account and retrieve detail for a single property, including the property slug used to build direct booking and payment-page links.
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
+- [Uplisting Authentication](https://apis.io/security/uplisting/uplisting-authentication/)
+- [Uplisting Domain Security](https://apis.io/security/uplisting/uplisting-domain-security/)
 
-#### Tags
+#### Plans and pricing (1)
 
-- Properties
-- Listings
+Published plans, tiers and prices.
 
-#### Properties
+- [Uplisting Plans Pricing](https://apis.io/plans/uplisting/uplisting-plans-pricing/)
 
-- [Documentation](https://support.uplisting.io/docs/api)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Rate limits (1)
 
-### Uplisting Availability API
+Published request limits.
 
-Return the list of properties that are available for a given date range, optionally filtered by number of guests. Used to power search on the direct booking widget and website.
+- [Uplisting Rate Limits](https://apis.io/rate-limits/uplisting/uplisting-rate-limits/)
 
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
+#### FinOps (1)
 
-#### Tags
+What the API costs to run, by operation.
 
-- Availability
-- Search
+- [Uplisting Finops](https://apis.io/finops/uplisting/uplisting-finops/)
 
-#### Properties
+## Where to find this API
 
-- [Documentation](https://support.uplisting.io/docs/api)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-### Uplisting Calendar API
-
-Retrieve availability, prices, and restrictions (minimum stay, closed to arrival/departure) for a property across a date range, and submit calendar updates. Calendar update calls are accepted asynchronously (HTTP 202).
-
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
-
-#### Tags
-
-- Calendar
-- Availability
-- Restrictions
-
-#### Properties
-
-- [Documentation](https://support.uplisting.io/docs/api)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Uplisting Rates API
-
-Read and push nightly rates and price adjustments per property and date, delivered through the calendar surface. Rate updates propagate out to the connected channels. Endpoint shapes are modeled from the documented calendar and pricing behavior; confirm exact paths under the invite-only reference.
-
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
-
-#### Tags
-
-- Rates
-- Pricing
-
-#### Properties
-
-- [Documentation](https://support.uplisting.io/docs/api)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Uplisting Guests API
-
-Read guest records associated with bookings - name, contact details, and identity-verification status. Guest resources are modeled from Uplisting's documented booking and guest-verification features; confirm exact paths under the invite-only reference.
-
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
-
-#### Tags
-
-- Guests
-- Contacts
-
-#### Properties
-
-- [Documentation](https://support.uplisting.io/docs/api)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Uplisting Messages API
-
-Read and send guest messages tied to a booking through Uplisting's unified inbox, which consolidates Airbnb, Vrbo, and Booking.com conversations. Message resources are modeled from the documented automated-messaging and inbox features; confirm exact paths under the invite-only reference.
-
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
-
-#### Tags
-
-- Messages
-- Unified Inbox
-
-#### Properties
-
-- [Documentation](https://support.uplisting.io/docs/api)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Uplisting Webhooks API
-
-Register, list, and remove webhook endpoints that receive booking created, updated, and removed events. Endpoints must return a 2xx response within 5 seconds; an endpoint is auto-disabled after 5 consecutive failed deliveries. Webhooks are the recommended way to stay in sync after an initial snapshot.
-
-- **Human URL:** [https://support.uplisting.io/docs/api](https://support.uplisting.io/docs/api)
-- **Base URL:** `https://connect.uplisting.io`
-
-#### Tags
-
-- Webhooks
-- Events
-
-#### Properties
-
-- [Documentation](https://support.uplisting.io/docs/api)
-- [OpenAPI](openapi/uplisting-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/uplisting.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/uplisting.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/uplisting)
 - [Website](https://www.uplisting.io)
 - [Documentation](https://support.uplisting.io/docs/api)
-- [Plans](plans/uplisting-plans-pricing.yml)
-- [Rate Limits](rate-limits/uplisting-rate-limits.yml)
-- [Fin Ops](finops/uplisting-finops.yml)
+- [Blog](https://www.uplisting.io/blog)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 23.7** — emerging · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 44.8 |
+| Contract governance | 0.0 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 21.4 |
+| Access clarity | 7.9 |
+
+**Agent readiness 42.4** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 11.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/uplisting/](https://apis.io/providers/uplisting/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Uplisting: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/uplisting/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
